@@ -1,0 +1,135 @@
+package johnbryce.exercises;
+
+/*
+
+Created by Elad on 15/01/2022
+
+*/
+
+import java.util.ArrayList;
+import java.util.Random;
+import java.util.Scanner;
+
+public class Simulation1 {
+    // Declaring global variables
+    private static final Random random = new Random();
+    private static final Scanner in = new Scanner(System.in);
+
+    private static int guess = 0;
+    private static final int targetNum = randomNumber();
+    private static ArrayList<Integer> binaryNumber = new ArrayList<Integer>();
+    private static ArrayList<String> hashedList = new ArrayList<String>();
+
+    public static void main(String[] args) {
+        // Starting the program
+        runProgram();
+    }
+
+    public static void runProgram() {
+        // Explaining game rules
+        System.out.println("Guess the number!");
+        System.out.println("An encrypted binary number will appear on the screen");
+        System.out.println("your goal is to guess the number behind it");
+        System.out.println("The number must be between 1 to 16");
+        System.out.println("every wrong guess one digit will be revealed, good luck!");
+        System.out.println();
+        // Calling the decimal to binary converter method
+        binaryConverter(targetNum);
+        // Calling the user guess method
+        guess();
+    }
+
+    public static int randomNumber() {
+        // Generating random number
+        return random.nextInt(16) + 1;
+    }
+
+    public static ArrayList<Integer> binaryConverter(int decimal) {
+        // Converting decimal number to binary number
+        ArrayList<Integer> reversedBinaryNumber = new ArrayList<Integer>();
+        int i = 0;
+        while (decimal > 0) {
+            reversedBinaryNumber.add(decimal % 2);
+            decimal /= 2;
+            i++;
+        }
+        // Reversing the ArrayList
+        binaryNumber = new ArrayList<Integer>();
+        while (i > 0) {
+            binaryNumber.add(reversedBinaryNumber.get(i - 1));
+            i--;
+        }
+
+        return binaryNumber;
+    }
+
+    public static ArrayList<String> encryptedBinary(ArrayList<Integer> number) {
+        // Replacing binary number digits with "-"
+        hashedList = new ArrayList<String>();
+        for (int n : number) {
+            hashedList.add("-");
+        }
+        return hashedList;
+    }
+
+    public static void newHashedList(ArrayList<String> hashedList, ArrayList<Integer> numbersList) {
+        // Revealing digits
+        for (int i = 1; i <= guess; i++) {
+            hashedList.set(hashedList.size() - i, String.valueOf(numbersList.get(hashedList.size() - i)));
+        }
+        // Printing encrypted binary number
+        for (String w : hashedList) {
+            System.out.print(w + " ");
+        }
+        System.out.println();
+    }
+
+    public static void guess(){
+        // Printing the encrypted binary number for the user
+        System.out.print("Binary number is: ");
+        newHashedList(encryptedBinary(binaryNumber),(binaryNumber));
+        System.out.println();
+
+        // Taking the user guess
+        System.out.printf("Please enter guess num %s: \n", (guess+1));
+        int userGuess = in.nextInt();
+        if(userGuess == targetNum){
+            correctAnswer();
+        }else{
+            incorrectAnswer();
+        }
+    }
+
+    public static void correctAnswer(){
+        // Correct guess response
+        System.out.println("Your answer is correct! 🏆🏆");
+        endMsg(targetNum,binaryNumber);
+    }
+
+    public static void incorrectAnswer(){
+        // Incorrect guess response
+        guess++;
+        if(guess < hashedList.size()){
+            System.out.println("Your answer is incorrect, please try again.");
+            guess();
+        }
+        // Losing the game
+        else{
+            System.out.printf("You lost, correct answer was %d\n", targetNum);
+            endMsg(targetNum,binaryNumber);
+        }
+    }
+
+    public static void endMsg(int decimalNum, ArrayList<Integer> binaryNum){
+        // Converting binary number from list to string
+        String joinedBinaryNumber = "";
+        for (int n: binaryNum) {
+            joinedBinaryNumber += n;
+        }
+
+        // Printing end message
+        System.out.printf("The number %d in base 10 is %s in binary\n", decimalNum, joinedBinaryNumber);
+        System.out.println("Thank you for playing");
+    }
+
+}
