@@ -17,8 +17,8 @@ public class Simulation1 {
 
     private static int guess = 0;
     private static final int targetNum = randomNumber();
-    private static ArrayList<Integer> binaryNumber = new ArrayList<Integer>();
-    private static ArrayList<String> hashedList = new ArrayList<String>();
+    private static ArrayList<Integer> binaryNumber = new ArrayList<>();
+    private static ArrayList<String> hashedList = new ArrayList<>();
 
     public static void main(String[] args) {
         // Starting the program
